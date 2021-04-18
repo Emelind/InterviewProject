@@ -19,39 +19,63 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     var apiData = ApiData()
     
+    var myCollectionView: UICollectionView?
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .white
-        
+        self.title = "Pugs"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-    
-        loadData()
-        
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        layout.itemSize = CGSize(width: 140, height: 140)
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 180, height: 180)
         
-        let myCollectionView:UICollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        myCollectionView.dataSource = self
-        myCollectionView.delegate = self
-        myCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
-        myCollectionView.backgroundColor = UIColor.white
-        self.view.addSubview(myCollectionView)
+        myCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        myCollectionView!.dataSource = self
+        myCollectionView!.delegate = self
+        myCollectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
+        myCollectionView!.backgroundColor = .white
+        self.view.addSubview(myCollectionView!)
+        
+        loadData()
 
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 50
+        return self.apiData.message.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath)
-        myCell.backgroundColor = UIColor.blue
+        
+        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath as IndexPath)
+        myCell.backgroundColor = .black
+        
+        myCell.layer.cornerRadius = 10
+        
+        let imageUrlString = self.apiData.message[indexPath.row]
+        
+        let imageUrl:NSURL = NSURL(string: imageUrlString)!
+        
+        let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            let imageData:NSData = NSData(contentsOf: imageUrl as URL)!
+            
+            DispatchQueue.main.async {
+                
+                let image = UIImage(data: imageData as Data)
+                imageView.image = image
+                imageView.contentMode = .scaleAspectFit
+                myCell.addSubview(imageView)
+            }
+        }
         
         return myCell
     }
@@ -59,6 +83,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
         print("User tapped on item \(indexPath.row)")
+        
+        let imageUrlString = self.apiData.message[indexPath.row]
+        
+        let detailViewController = DetailViewController()
+        detailViewController.imageUrlString = imageUrlString
+        self.navigationController?.pushViewController(detailViewController, animated: true)
+        
+        print("Image url = \(imageUrlString)")
     }
     
     func loadData() {
@@ -72,6 +104,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 self.apiData = try decoder.decode(ApiData.self, from: data)
                 print(self.apiData.message)
                 
+                DispatchQueue.main.async {
+                    self.myCollectionView!.reloadData()
+                }
+
             } catch let err {
                 print("Err", err)
             }
