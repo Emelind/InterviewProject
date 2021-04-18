@@ -12,108 +12,76 @@ import UIKit
 //- Get list of dog photos from the JSON API  - Show a gallery view of all dog photos 
 //- Show a detail view for a single dog photo - Make the app as user-friendly as you can.
 
-struct DemoData: Codable {
-    let message: [String]
-}
 
 
-class ViewController: UIViewController {
+
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    private let myView: UIView = {
-       let myView = UIView()
-        myView.backgroundColor = .link
-        myView.translatesAutoresizingMaskIntoConstraints = false
-        return myView
-    }()
+    var apiData = ApiData()
     
-    private let secondView: UIView = {
-        let secondView = UIView()
-         secondView.backgroundColor = .systemTeal
-         secondView.translatesAutoresizingMaskIntoConstraints = false
-         return secondView
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let localData = self.readLocalFile(forName: "data") {
-            self.parse(jsonData: localData)
-        }
-        
-        let urlString = "https://dog.ceo/api/breeds/image/random/50"
-        self.loadJson(fromURLString: urlString) { (result) in
-            switch (result) {
-            case .success(let data):
-                self.parse(jsonData: data)
-            case .failure(let error):
-                print(error)
-            }
-        }
-        
         view.backgroundColor = .white
-        view.addSubview(myView)
-        myView.addSubview(secondView)
-        addContraints()
+        
     }
     
-    private func readLocalFile(forName name: String) -> Data? {
-        do {
-            if let bundlePath = Bundle.main.path(forResource: name, ofType: "json"),
-                let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
-                return jsonData
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    
+        loadData()
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        layout.itemSize = CGSize(width: 140, height: 140)
+        
+        let myCollectionView:UICollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        myCollectionView.dataSource = self
+        myCollectionView.delegate = self
+        myCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
+        myCollectionView.backgroundColor = UIColor.white
+        self.view.addSubview(myCollectionView)
+
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 50
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath)
+        myCell.backgroundColor = UIColor.blue
+        
+        return myCell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        print("User tapped on item \(indexPath.row)")
+    }
+    
+    func loadData() {
+        
+        guard let url = URL(string: "https://dog.ceo/api/breeds/image/random/50") else { return }
+        
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data  = data else { return }
+            do {
+                let decoder = JSONDecoder()
+                self.apiData = try decoder.decode(ApiData.self, from: data)
+                print(self.apiData.message)
+                
+            } catch let err {
+                print("Err", err)
             }
-        } catch {
-            print(error)
-        }
-        
-        return nil
-    }
-    
-    private func loadJson(fromURLString urlString: String,
-                          completion: @escaping (Result<Data, Error>) -> Void) {
-        if let url = URL(string: urlString) {
-            let urlSession = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
-                if let error = error {
-                    completion(.failure(error))
-                }
-                if let data = data {
-                    completion(.success(data))
-                }
-            }
-            urlSession.resume()
-        }
-    }
-    
-    private func parse(jsonData: Data) {
-        do {
-            let decodedData = try JSONDecoder().decode(DemoData.self, from: jsonData)
-            
-            print("URL: ", decodedData.message)
-            print("===================================")
-        } catch {
-            print("decode error")
-        }
+        }.resume()
     }
     
     
-    // constraint function
-    private func addContraints() {
-        var constraints = [NSLayoutConstraint]()
-        
-        //Add
-        constraints.append(myView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor))
-        constraints.append(myView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor))
-        constraints.append(myView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor))
-        constraints.append(myView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor))
-        
-        // Second view
-        constraints.append(secondView.widthAnchor.constraint(equalTo: myView.widthAnchor, multiplier: 0.5))
-        constraints.append(secondView.heightAnchor.constraint(equalTo: myView.heightAnchor, multiplier: 0.5))
-        constraints.append(secondView.centerYAnchor.constraint(equalTo: myView.centerYAnchor))
-        constraints.append(secondView.centerXAnchor.constraint(equalTo: myView.centerXAnchor))
-        
-        //Activate (applying)
-        NSLayoutConstraint.activate(constraints)
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
 }
 
