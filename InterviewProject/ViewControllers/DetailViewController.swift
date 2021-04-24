@@ -23,20 +23,26 @@ class DetailViewController: UIViewController {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .green
         return view
     }()
     
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "This is a really cute pug!"
+        label.text = "This is a really \ncute pug!"
+        label.numberOfLines = 2
+        label.font = .boldSystemFont(ofSize: 30)
+        label.backgroundColor = .blue
         return label
     }()
     
     private let descLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Doggo ipsum pupper woofer you are doing me a frigthen fluffer borkdrive heckin smol borking doggo with a long snoot for pats, doggorino such treat shoober wrinkler thicc. Very jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer."
+        label.text = "Doggo ipsum pupper woofer you are doing me a frigthen fluffer borkdrive heckin smol borking doggo with a long snoot for pats, doggorino such treat shoober wrinkler thicc. \n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer."
+        label.numberOfLines = 0
+        label.backgroundColor = .red
         return label
     }()
     
@@ -91,6 +97,23 @@ class DetailViewController: UIViewController {
             detailView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             detailView.widthAnchor.constraint(equalToConstant: viewFrame.width),
             detailView.heightAnchor.constraint(equalToConstant: viewFrame.height)
+        ])
+        
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: viewFrame.width),
+            imageView.heightAnchor.constraint(equalToConstant: viewFrame.height/2)
+            
+        ])
+        
+        NSLayoutConstraint.activate([
+            headerLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -40),
+            headerLabel.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20)
+        ])
+        
+        NSLayoutConstraint.activate([
+            descLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 30),
+            descLabel.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20),
+            descLabel.trailingAnchor.constraint(equalTo: detailView.trailingAnchor, constant: -20)
         ])
 
     }
