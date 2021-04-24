@@ -15,17 +15,29 @@ class DetailViewController: UIViewController {
         let view = UIView()
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .gray
         return view
     }()
     
     private let imageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleAspectFill
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .green
         return view
     }()
+    
+    let gradientView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let gradient: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.clear.cgColor, UIColor.white.cgColor]
+        gradient.locations = [0.2, 0.5]
+        return gradient
+    }()
+        
     
     private let headerLabel: UILabel = {
         let label = UILabel()
@@ -33,7 +45,6 @@ class DetailViewController: UIViewController {
         label.text = "This is a really \ncute pug!"
         label.numberOfLines = 2
         label.font = .boldSystemFont(ofSize: 30)
-        label.backgroundColor = .blue
         return label
     }()
     
@@ -42,7 +53,6 @@ class DetailViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Doggo ipsum pupper woofer you are doing me a frigthen fluffer borkdrive heckin smol borking doggo with a long snoot for pats, doggorino such treat shoober wrinkler thicc. \n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer."
         label.numberOfLines = 0
-        label.backgroundColor = .red
         return label
     }()
     
@@ -50,13 +60,18 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        navigationController?.navigationBar.tintColor = .systemPink
         self.title = "Really cute pug"
         
         detailView.addSubview(imageView)
+        view.addSubview(detailView)
+        gradientView.frame = view.frame
+        gradient.frame = gradientView.frame
+        gradientView.layer.insertSublayer(gradient, at: 0)
+        imageView.addSubview(gradientView)
+        imageView.bringSubviewToFront(gradientView)
         detailView.addSubview(headerLabel)
         detailView.addSubview(descLabel)
-        
-        view.addSubview(detailView)
         
         setUpAutoLayout()
         
@@ -71,15 +86,15 @@ class DetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         if let imageUrl = imageUrlString {
-            
+
             let url:NSURL = NSURL(string: imageUrl)!
-            
+
             DispatchQueue.global(qos: .userInitiated).async {
-                
+
                 let imageData:NSData = NSData(contentsOf: url as URL)!
-                
+
                 DispatchQueue.main.async {
-                    
+
                     let image = UIImage(data: imageData as Data)
                     self.imageView.image = image
                 }
@@ -115,6 +130,5 @@ class DetailViewController: UIViewController {
             descLabel.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20),
             descLabel.trailingAnchor.constraint(equalTo: detailView.trailingAnchor, constant: -20)
         ])
-
     }
 }
