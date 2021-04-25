@@ -7,14 +7,6 @@
 
 import UIKit
 
-// TITLES
-// SAVE LAST POSITION ON SCROLLVIEW i viewcontroller
-// Skicka med image istället för imageurl ?
-// Bryta ut views i separata filer
-// Radavstånd descLabel detailVC
-// Scroll på detail view?
-// FIT TEXT, CHNAGE LABEL TEXT SIXE
-
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var apiData = ApiData()
