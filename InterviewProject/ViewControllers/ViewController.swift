@@ -7,43 +7,59 @@
 
 import UIKit
 
-// IMAGE FIT SIZE HEIGHT PÅ DETAIL VIEW
-
 // TITLES
-// FILL LABEL WITH "REAL FAKE" TEXT
-// SAVE LAST POSITION ON SCROLLVIEW
-// IMAGE FADE OUT ON DETAIL VIEW
+// SAVE LAST POSITION ON SCROLLVIEW i viewcontroller
+// Skicka med image istället för imageurl ?
+// Bryta ut views i separata filer
+// Radavstånd descLabel detailVC
+// Scroll på detail view?
+// FIT TEXT, CHNAGE LABEL TEXT SIXE
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var apiData = ApiData()
     
     var myCollectionView: UICollectionView?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Pugs"
-        //self.navigationController?.navigationBar.prefersLargeTitles = true
+
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(false)
+        
+        // Try to get title in DetailVC to go back to small
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.title = "Pugs"
+        
+        // Large title only works correctly first time. When jumping between VCs, title display differs from time to time.. ? Below, try to fix. Not working.
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        
+        setUpCollectionView()
+        
+        self.view.addSubview(myCollectionView!)
+        
+        loadData()
+
+    }
+    
+    private func setUpCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        layout.itemSize = CGSize(width: 165, height: 165)
+        layout.itemSize = CGSize(width: (view.frame.width-60)/2, height: (view.frame.width-60)/2)
         
         myCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
         myCollectionView!.dataSource = self
         myCollectionView!.delegate = self
         myCollectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
         myCollectionView!.backgroundColor = .white
-        self.view.addSubview(myCollectionView!)
-        
-        loadData()
-
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -74,21 +90,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 myCell.addSubview(imageView)
             }
         }
-        
         return myCell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
-    {
-        print("User tapped on item \(indexPath.row)")
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let imageUrlString = self.apiData.message[indexPath.row]
         
         let detailViewController = DetailViewController()
         detailViewController.imageUrlString = imageUrlString
         self.navigationController?.pushViewController(detailViewController, animated: true)
-        
-        print("Image url = \(imageUrlString)")
+
     }
     
     func loadData() {
@@ -105,11 +117,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     DispatchQueue.main.async {
                         self.myCollectionView!.reloadData()
                     }
-
                 } catch let err {
                     print("Err", err)
                 }
             }.resume()
+            
         } else {
             print(apiData.count)
         }
@@ -118,8 +130,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-        print("did receive memory warning")
+        print("Did receive memory warning")
     }
 }
 
