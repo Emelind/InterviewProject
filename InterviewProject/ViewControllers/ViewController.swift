@@ -21,8 +21,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(false)
         
-        // Try to get title in DetailVC to go back to small
-        navigationController?.navigationBar.prefersLargeTitles = false
+        // Try to get title in DetailVC to go back to small, when jumping between VCs
+        //navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -31,8 +31,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.title = "Pugs"
         
         // Large title only works correctly first time. When jumping between VCs, title display differs from time to time.. ? Below, try to fix. Not working.
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
+        //self.navigationController?.navigationBar.prefersLargeTitles = true
+        //navigationItem.largeTitleDisplayMode = .always
         
         setUpCollectionView()
         
@@ -115,7 +115,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             }.resume()
             
         } else {
-            print(apiData.count)
+            print("Count: \(apiData.count)")
         }
     }
     

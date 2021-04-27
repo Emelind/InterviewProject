@@ -62,11 +62,12 @@ class DetailViewController: UIViewController {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Doggo ipsum pupper woofer you are doing me a frigthen fluffer borkdrive heckin smol borking doggo with a long snoot for pats, doggorino such treat shoober wrinkler thicc. \n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer."
+        
+        // Adjusting font size if text exceeds the boundings, as I could not get scrollview to work
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0
         label.numberOfLines = 10
         
-
         label.textColor = .darkText
         return label
     }()
@@ -92,7 +93,7 @@ class DetailViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.tintColor = .systemPink
-        self.navigationController?.navigationBar.prefersLargeTitles = false
+        //self.navigationController?.navigationBar.prefersLargeTitles = false
         
         self.title = "Really cute pug"
         
@@ -127,7 +128,6 @@ class DetailViewController: UIViewController {
         gradientView.layer.insertSublayer(gradient, at: 0)
         imageView.addSubview(gradientView)
         imageView.bringSubviewToFront(gradientView)
-        
         
         // TRY TO ADD SCROLL
         //scrollView.frame = view.bounds
