@@ -7,14 +7,12 @@
 
 import Foundation
 
-struct ApiData: Codable {
+struct Dog: Codable {
     
     let message: [String]
-    let status: String
     
     init() {
         message = [String]()
-        status = ""
     }
     
     var count : Int {

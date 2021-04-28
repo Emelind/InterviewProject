@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DogDetailViewController: UIViewController {
     
     var imageUrlString: String?
     
@@ -43,20 +43,11 @@ class DetailViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "This is a really \ncute pug!"
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         label.font = .boldSystemFont(ofSize: 30)
         label.textColor = .black
         return label
     }()
-    
-    
-    // TRY TO ADD SCROLL
-//    private let scrollView: UIScrollView = {
-//        let view = UIScrollView()
-//        view.backgroundColor = .blue
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
     
     private let descLabel: UILabel = {
        let label = UILabel()
@@ -82,20 +73,12 @@ class DetailViewController: UIViewController {
         setUpAutoLayout()
     }
     
-    // Try to get title in ViewController to go back to large
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        //navigationController?.navigationBar.prefersLargeTitles = true
-        
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.tintColor = .systemPink
-        //self.navigationController?.navigationBar.prefersLargeTitles = false
-        
-        self.title = "Really cute pug"
+        navigationController?.navigationBar.tintColor = .systemPink
+        navigationItem.largeTitleDisplayMode = .never
+        title = "Really cute pug"
         
         loadImage()
     }
@@ -129,13 +112,6 @@ class DetailViewController: UIViewController {
         imageView.addSubview(gradientView)
         imageView.bringSubviewToFront(gradientView)
         
-        // TRY TO ADD SCROLL
-        //scrollView.frame = view.bounds
-        //scrollView.contentSize = descLabel.bounds.size
-        //scrollView.autoresizingMask = .flexibleHeight
-        //scrollView.addSubview(descLabel)
-        //detailView.addSubview(scrollView)
-        
         detailView.addSubview(headerLabel)
         
         detailView.addSubview(descLabel)
@@ -150,28 +126,14 @@ class DetailViewController: UIViewController {
             detailView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             detailView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             detailView.widthAnchor.constraint(equalToConstant: viewFrame.width),
-            detailView.heightAnchor.constraint(equalToConstant: viewFrame.height)
-        ])
-        
-        NSLayoutConstraint.activate([
+            detailView.heightAnchor.constraint(equalToConstant: viewFrame.height),
+
             imageView.widthAnchor.constraint(equalToConstant: viewFrame.width),
-            imageView.heightAnchor.constraint(equalToConstant: viewFrame.height/2)
-        ])
-        
-        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: viewFrame.height/2),
+
             headerLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -40),
-            headerLabel.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20)
-        ])
-        
-        // TRY TO ADD SCROLL
-//        NSLayoutConstraint.activate([
-//            scrollView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 30),
-//            scrollView.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20),
-//            scrollView.trailingAnchor.constraint(equalTo: detailView.trailingAnchor, constant: -20),
-//            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
-        
-        NSLayoutConstraint.activate([
+            headerLabel.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20),
+
             descLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 30),
             descLabel.leadingAnchor.constraint(equalTo: detailView.leadingAnchor, constant: 20),
             descLabel.trailingAnchor.constraint(equalTo: detailView.trailingAnchor, constant: -20)
