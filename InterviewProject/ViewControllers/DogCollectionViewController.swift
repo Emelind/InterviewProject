@@ -64,7 +64,7 @@ class DogCollectionViewController: UIViewController {
         collectionView.collectionViewLayout = layout
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DogCell")
         
         view.addSubview(collectionView)
     }
@@ -84,16 +84,16 @@ extension DogCollectionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath as IndexPath)
-        myCell.backgroundColor = .black
-        myCell.clipsToBounds = true
-        myCell.layer.cornerRadius = 10
+        let dogCell = collectionView.dequeueReusableCell(withReuseIdentifier: "DogCell", for: indexPath as IndexPath)
+        dogCell.backgroundColor = .black
+        dogCell.clipsToBounds = true
+        dogCell.layer.cornerRadius = 10
         
         let imageUrlString = dogs.message[indexPath.row]
         
         let imageUrl:NSURL = NSURL(string: imageUrlString)!
         
-        let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
+        let imageView = UIImageView(frame: CGRect(x:0, y:0, width:dogCell.frame.size.width, height:dogCell.frame.size.height))
         
         DispatchQueue.global(qos: .userInitiated).async {
             
@@ -103,10 +103,10 @@ extension DogCollectionViewController: UICollectionViewDelegate {
                 let image = UIImage(data: imageData as Data)
                 imageView.image = image
                 imageView.contentMode = .scaleAspectFill
-                myCell.addSubview(imageView)
+                dogCell.addSubview(imageView)
             }
         }
-        return myCell
+        return dogCell
     }
 }
 
