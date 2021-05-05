@@ -13,18 +13,37 @@ class DogDetailImageTableViewCell: UITableViewCell {
     
     let dogImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .green
-        //imageView.image = .....
-        //imageView.contentMode = ....
-        //imageView.clipsToBounds = ...
+        imageView.backgroundColor = .black
+        imageView.contentMode = .scaleAspectFill
+        //imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
         return imageView
+    }()
+    
+    let gradientView: UIView = {
+        let view = UIView()
+        //view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let gradient: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.clear.cgColor, UIColor.white.cgColor]
+        gradient.locations = [0.1, 0.9]
+        return gradient
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.backgroundColor = .orange
+        gradientView.layer.insertSublayer(gradient, at: 0)
+        
+        dogImageView.addSubview(gradientView)
+        dogImageView.bringSubviewToFront(gradientView)
+        
+        contentView.backgroundColor = .red
         contentView.addSubview(dogImageView)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -34,10 +53,13 @@ class DogDetailImageTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        dogImageView.frame = CGRect(x: 0,
-                                    y: 0,
-                                    width: contentView.frame.size.width-5,
-                                    height: contentView.frame.size.height-5)
+        let frame = CGRect(x: 0,
+                           y: 0,
+                           width: contentView.frame.size.width,
+                           height: contentView.frame.size.height)
+        
+        dogImageView.frame = frame
+        gradientView.frame = frame
+        gradient.frame = frame
     }
-    
 }

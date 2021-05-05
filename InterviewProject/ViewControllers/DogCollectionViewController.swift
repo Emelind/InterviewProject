@@ -55,9 +55,12 @@ class DogCollectionViewController: UIViewController {
         }
     }
     
+
+    
     private func setUpCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        layout.minimumLineSpacing = 20
         layout.itemSize = CGSize(width: (view.frame.width-60)/2, height: (view.frame.width-60)/2)
 
         collectionView.frame = view.frame

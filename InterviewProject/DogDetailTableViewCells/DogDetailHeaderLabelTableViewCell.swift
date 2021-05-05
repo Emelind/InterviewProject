@@ -33,11 +33,11 @@ class DogDetailHeaderLabelTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        dogHeaderLabel.frame = CGRect(x: 0,
+        
+        dogHeaderLabel.frame = CGRect(x: 20,
                                     y: 0,
-                                    width: contentView.frame.size.width-5,
-                                    height: contentView.frame.size.height-5)
+                                    width: contentView.frame.size.width/1.5,
+                                    height: contentView.frame.size.height)
     }
 
 }
