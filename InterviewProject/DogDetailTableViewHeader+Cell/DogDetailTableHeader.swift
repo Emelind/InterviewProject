@@ -5,21 +5,20 @@
 //  Created by Emelie on 2021-05-04.
 //
 
-import Foundation
 import UIKit
 
 class DogDetailTableHeader: UITableViewHeaderFooterView {
     
     static let identifier = "TableHeader"
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
     
-    let gradientView: UIView = {
+    private let gradientView: UIView = {
         let view = UIView()
         return view
     }()
@@ -61,30 +60,21 @@ class DogDetailTableHeader: UITableViewHeaderFooterView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        print("layout subviews")
         
-        let frame = CGRect(x: 0,
+        let imageViewFrame = CGRect(x: 0,
                            y: 0,
                            width: UIScreen.main.bounds.size.width,
                            height: 400)
-        imageView.frame = frame
-        gradientView.frame = frame
-        gradient.frame = frame
         
-        headerLabel.frame = CGRect(x: 20,
-                                   y: 300,
-                                   width: contentView.frame.size.width/1.5,
-                                   height: 150)
-    }
-    
-    func scroll(contentOffset: CGPoint) {
-        let y = 300 - (contentOffset.y + 300)
-        let height = min(max(y, 60), 400)
-        let newFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height)
-        imageView.frame = newFrame
-        gradient.frame = newFrame
-        gradientView.frame = newFrame
-        headerLabel.frame = CGRect(x: 20, y: height - 30, width: 200, height: 22)
+        imageView.frame = imageViewFrame
+        gradientView.frame = imageViewFrame
+        gradient.frame = imageViewFrame
         
+        let headerLabelFrame = CGRect(x: 20,
+                                      y: 300,
+                                      width: contentView.frame.size.width/1.5,
+                                      height: 100)
+        
+        headerLabel.frame = headerLabelFrame
     }
 }
