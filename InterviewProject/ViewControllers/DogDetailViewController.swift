@@ -2,61 +2,74 @@
 //  DetailViewController.swift
 //  InterviewProject
 //
-//  Created by Emelie on 2021-04-18.
+//  Created by Emelie on 2021-05-09.
 //
 
 import UIKit
 
-class DogDetailViewController: UIViewController {
+class DogDetailViewController: UIViewController, UIScrollViewDelegate {
     
     var imageUrlString: String?
     
-    private let headerImageView: UIImageView = {
+    let dogDetailScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        return scrollView
+    }()
+    
+    private let dogDetailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private let headerGradientView: UIView = {
+    private let dogDetailImageGradientView: UIView = {
         let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let headerGradient: CAGradientLayer = {
+    private let dogDetailGradient: CAGradientLayer = {
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.clear.cgColor, UIColor.white.cgColor]
         gradient.locations = [0.1, 0.9]
         return gradient
     }()
     
-    private let headerLabel: UILabel = {
+    private let dogDetailHeaderLabel: UILabel = {
         let label = UILabel()
         label.text = "This is a really cute pug!"
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 30, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let tableView: UITableView = {
-        let table = UITableView()
-        table.separatorColor = .clear
-        table.register(DogDetailDescLabelTableViewCell.self,
-                       forCellReuseIdentifier: DogDetailDescLabelTableViewCell.identifier)
-        return table
+    let dogDetailTextLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Doggo ipsum pupper woofer you are doing me a frigthen fluffer borkdrive heckin smol borking doggo with a long snoot for pats, doggorino such treat shoober wrinkler thicc. \n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer.\n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer.\n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer.\n\nVery jealous pupper very good snot noodle horse shooberino you are doing me the shock extremely cuuuuuute, shibe heckin good boys and girls sub woofer heckin angery woofer."
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
-     
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.frame = view.bounds
+        dogDetailScrollView.delegate = self
+        dogDetailScrollView.frame = view.frame
         
-        setUpHeaderView()
+        loadImage()
         
-        view.addSubview(tableView)
-
+        addSubviews()
+        
+        addConstraints()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,46 +80,51 @@ class DogDetailViewController: UIViewController {
         title = "Really cute pug"
     }
     
-    func setUpHeaderView() {
-        
+    private func loadImage() {
         if let imageUrl = imageUrlString {
             let url:NSURL = NSURL(string: imageUrl)!
             DispatchQueue.global(qos: .userInitiated).async {
                 let imageData:NSData = NSData(contentsOf: url as URL)!
                 DispatchQueue.main.async {
                     let image = UIImage(data: imageData as Data)
-                    self.headerImageView.image = image
+                    self.dogDetailImageView.image = image
                 }
             }
         }
-        
-        headerGradientView.layer.insertSublayer(headerGradient, at: 0)
-        
-        headerImageView.addSubview(headerGradientView)
-        headerImageView.bringSubviewToFront(headerGradientView)
-        
-        headerImageView.addSubview(headerLabel)
-        
-        let headerFrame = CGRect(x: 0, y: 0, width: view.frame.width, height: 400)
-        headerImageView.frame = headerFrame
-        headerGradient.frame = headerFrame
-        headerGradientView.frame = headerFrame
-        
-        let headerLabelFrame = CGRect(x: 20, y: 300, width: view.frame.width/1.5, height: 100)
-        headerLabel.frame = headerLabelFrame
-        
-        tableView.tableHeaderView = headerImageView
     }
-}
-
-extension DogDetailViewController: UITableViewDataSource, UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+    
+    private func addSubviews() {
+        dogDetailImageGradientView.layer.insertSublayer(dogDetailGradient, at: 0)
+        dogDetailImageView.addSubview(dogDetailImageGradientView)
+        dogDetailImageView.bringSubviewToFront(dogDetailImageGradientView)
+        dogDetailImageView.addSubview(dogDetailHeaderLabel)
+        
+        dogDetailScrollView.addSubview(dogDetailImageView)
+        dogDetailScrollView.addSubview(dogDetailTextLabel)
+        
+        view.addSubview(dogDetailScrollView)
     }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DogDetailDescLabelTableViewCell.identifier, for: indexPath) as! DogDetailDescLabelTableViewCell
-        return cell
+    
+    private func addConstraints() {
+        dogDetailImageView.topAnchor.constraint(equalTo: dogDetailScrollView.topAnchor).isActive = true
+        dogDetailImageView.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        dogDetailImageView.heightAnchor.constraint(equalToConstant: view.frame.height/2).isActive = true
+        
+        dogDetailImageGradientView.topAnchor.constraint(equalTo: dogDetailScrollView.topAnchor).isActive = true
+        dogDetailImageGradientView.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        dogDetailImageGradientView.heightAnchor.constraint(equalToConstant: view.frame.height/2).isActive = true
+        
+        let gradientFrame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/2)
+        dogDetailGradient.frame = gradientFrame
+        
+        dogDetailHeaderLabel.widthAnchor.constraint(equalToConstant: view.frame.width/1.5).isActive = true
+        dogDetailHeaderLabel.leadingAnchor.constraint(equalTo: dogDetailImageView.leadingAnchor, constant: 20).isActive = true
+        dogDetailHeaderLabel.bottomAnchor.constraint(equalTo: dogDetailImageView.bottomAnchor).isActive = true
+        
+        dogDetailTextLabel.topAnchor.constraint(equalTo: dogDetailImageView.bottomAnchor, constant: 20).isActive = true
+        dogDetailTextLabel.leadingAnchor.constraint(equalTo: dogDetailScrollView.leadingAnchor, constant: 20).isActive = true
+        dogDetailTextLabel.trailingAnchor.constraint(equalTo: dogDetailScrollView.trailingAnchor, constant: -20).isActive = true
+        dogDetailTextLabel.widthAnchor.constraint(equalToConstant: view.frame.width-40).isActive = true
+        dogDetailTextLabel.bottomAnchor.constraint(equalTo: dogDetailScrollView.bottomAnchor).isActive = true
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 class DogCollectionViewController: UIViewController {
     
-    var dogs = Dog()
+    private var dogs = Dog()
 
     private var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 0, height: 0),
@@ -17,11 +17,6 @@ class DogCollectionViewController: UIViewController {
         collectionView.backgroundColor = .white
         return collectionView
     }()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -32,8 +27,7 @@ class DogCollectionViewController: UIViewController {
         loadData()
     }
     
-
-    func loadData() {
+    private func loadData() {
         
         if(dogs.count <= 0) {
             
@@ -54,8 +48,6 @@ class DogCollectionViewController: UIViewController {
             }.resume()
         }
     }
-    
-
     
     private func setUpCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -78,8 +70,8 @@ class DogCollectionViewController: UIViewController {
     }
 }
 
-//MARK: UICOllectionViewDelegate
-extension DogCollectionViewController: UICollectionViewDelegate {
+
+extension DogCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dogs.count
@@ -111,17 +103,13 @@ extension DogCollectionViewController: UICollectionViewDelegate {
         }
         return dogCell
     }
-}
-
-//MARK: UICollectionViewDataSource
-extension DogCollectionViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let imageUrlString = dogs.message[indexPath.row]
-        
-        let dogDetailViewController = DogDetailViewController()
-        dogDetailViewController.imageUrlString = imageUrlString
-        navigationController?.pushViewController(dogDetailViewController, animated: true)
+        let detailViewController = DogDetailViewController()
+        detailViewController.imageUrlString = imageUrlString
+        navigationController?.pushViewController(detailViewController, animated: true)
 
     }
 }
