@@ -70,7 +70,6 @@ class DogCollectionViewController: UIViewController {
     }
 }
 
-
 extension DogCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -80,14 +79,11 @@ extension DogCollectionViewController: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let dogCell = collectionView.dequeueReusableCell(withReuseIdentifier: "DogCell", for: indexPath as IndexPath)
-        dogCell.backgroundColor = .black
         dogCell.clipsToBounds = true
         dogCell.layer.cornerRadius = 10
         
         let imageUrlString = dogs.message[indexPath.row]
-        
         let imageUrl:NSURL = NSURL(string: imageUrlString)!
-        
         let imageView = UIImageView(frame: CGRect(x:0, y:0, width:dogCell.frame.size.width, height:dogCell.frame.size.height))
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -110,7 +106,6 @@ extension DogCollectionViewController: UICollectionViewDelegate, UICollectionVie
         let detailViewController = DogDetailViewController()
         detailViewController.imageUrlString = imageUrlString
         navigationController?.pushViewController(detailViewController, animated: true)
-
     }
 }
 
